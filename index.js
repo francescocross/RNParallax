@@ -1,9 +1,9 @@
 import React, { Component, useState } from 'react';
-import { TouchableOpacity, ActivityIndicator } from 'react-native'
+import { TouchableOpacity, ActivityIndicator, Image, ImageBackground } from 'react-native'
 import PropTypes from 'prop-types';
 import { useHeaderHeight } from '@react-navigation/stack';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   StyleSheet,
   Platform,
@@ -273,21 +273,24 @@ const RNParallax = props => {
   }
 
   const renderPlainBackground = () => {
-    const { backgroundColor } = props;
+    const { backgroundColor, lighterBackgroundColor } = props;
 
     const imageOpacity = getImageOpacity();
     const imageTranslate = getImageTranslate();
     const imageScale = getImageScale();
 
     return (
-      <Animated.View
-        style={{
-          height: getHeaderMaxHeight(),
-          backgroundColor,
-          opacity: imageOpacity,
-          transform: [{ translateY: imageTranslate }, { scale: imageScale }],
-        }}
-      />
+      <LinearGradient colors={[lighterBackgroundColor, backgroundColor]}>
+        <ImageBackground style={{ resizeMode: "cover", height:"105%" }} source={require('../../assets/images/15041.png')}>
+          <Animated.View
+            style={{
+              height: getHeaderMaxHeight(),
+              borderBottomRightRadius: getBorderRadiusBottom(),
+              transform: [{ translateY: imageTranslate }, { scale: imageScale }],
+            }}
+          />
+        </ImageBackground>
+      </LinearGradient>
     );
   }
 
@@ -373,12 +376,17 @@ const RNParallax = props => {
         {typeof title === 'string'
           && (
             <View>
-              <Text style={[styles.headerText, titleStyle, { color: titleColorAccent, fontSize: normalize(35) }]}>
-                Bentornato
+              <View style={{ flexDirection: "row" }}>
+                <Image style={{ height: 100, width: 100, resizeMode: "contain" }} source={props.image} />
+                <View style={{ flexDirection: "column", paddingTop: "7%" }}>
+                  <Text style={[styles.headerText, titleStyle, { color: titleColorAccent, fontSize: normalize(32) }]}>
+                    Bentornato
           </Text>
-              <Text style={[titleStyle, { color: titleColorAccent }]}>
-                {title}
-              </Text>
+                  <Text style={[titleStyle, { paddingLeft: normalize(2), color: titleColorAccent }]}>
+                    {title}
+                  </Text>
+                </View>
+              </View>
             </View>
           )
         }
